@@ -1,11 +1,14 @@
-﻿using MQTTnet;
+﻿using System.Buffers;
+using System.Text;
+using MQTTnet;
+using MQTTnet.Protocol;
 
 
 var broker = "srv2.clusterfly.ru";
 var port = 9991;
 var username = "user_8fc82227";
-var password = "vmCjMZtwghDO0";
-var studentN = "5";
+var password = "hrut8uPlpVwBF";
+var studentN = 24;
 
 var factory = new MqttClientFactory();
 var mqttClient = factory.CreateMqttClient();
@@ -27,3 +30,30 @@ else
     Console.WriteLine("Ошибка подключения: " + connectResult.ResultCode);
     return;
 }
+
+var topic1 = $"{username}/Student{studentN}/Value1";
+var topic2 = $"{username}/Student{studentN}/Value2";
+var topic3 = $"{username}/+/Value3";
+
+var subscribeOptions = new MqttClientSubscribeOptionsBuilder()
+            .WithTopicFilter(topic1, MqttQualityOfServiceLevel.AtLeastOnce)
+            .WithTopicFilter(topic2, MqttQualityOfServiceLevel.AtLeastOnce)
+            .WithTopicFilter(topic3, MqttQualityOfServiceLevel.AtLeastOnce)
+            .Build();
+
+var subscribeResult = await mqttClient.SubscribeAsync(subscribeOptions);
+
+foreach (var result in subscribeResult.Items)
+{
+    Console.WriteLine($"Подписка на {result.TopicFilter.Topic}: {result.ResultCode}");
+}
+
+mqttClient.ApplicationMessageReceivedAsync += async args =>
+{
+    var message = Encoding.UTF8.GetString(args.ApplicationMessage.Payload);
+    Console.WriteLine($"Получено сообщение по топику '{args.ApplicationMessage.Topic}': {message}");
+    await Task.CompletedTask;
+};
+
+Console.WriteLine("Ожидание сообщений. Нажмите Enter для выхода.");
+Console.ReadLine();
