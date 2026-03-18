@@ -6,8 +6,8 @@ using MQTTnet.Protocol;
 
 var broker = "srv2.clusterfly.ru";
 var port = 9991;
-var username = "user_8fc82227";
-var password = "hrut8uPlpVwBF";
+var username = "user_5ed32268";
+var password = "3RdHTCSLlHHml";
 var studentN = 24;
 
 var factory = new MqttClientFactory();
@@ -16,7 +16,6 @@ var mqttClient = factory.CreateMqttClient();
 var options = new MqttClientOptionsBuilder()
             .WithTcpServer(broker, port)
             .WithCredentials(username, password)
-            .WithCleanSession()
             .Build();
 
 var connectResult = await mqttClient.ConnectAsync(options);
