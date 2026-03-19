@@ -6,8 +6,8 @@ using MQTTnet.Protocol;
 
 var broker = "srv2.clusterfly.ru";
 var port = 9991;
-var username = "user_5ed32268";
-var password = "3RdHTCSLlHHml";
+var username = "user_0d181660";
+var password = "qaf0imzefxXVQ";
 var studentN = 24;
 
 var factory = new MqttClientFactory();
